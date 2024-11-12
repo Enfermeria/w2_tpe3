@@ -1,0 +1,23 @@
+
+body { /* como el menú está fijado al top, dejo un espacio para que no tape los títulos */
+    min-height: 75rem;
+    padding-top: 3.5rem;
+  }
+  
+
+td {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+.BORRARtabla-generos {
+    background-image: 
+        linear-gradient(0deg, rgba(100, 100, 100, 0.7), rgba(100, 100, 100, 0.7) ),
+        url('../images/libros-generos-fondo.png');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    padding: 20px; 
+    min-height: 100vh;
+    color:white;
+}
