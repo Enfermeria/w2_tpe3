@@ -158,7 +158,7 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
       ```
       Para obtener todos los libros ordenados por título en orden por defecto (ascendente):
       ```http
-      GET <<BaseUrl>>/api/libros?orderBy=autor
+      GET <<BaseUrl>>/api/libros?orderBy=titulo
       ```
 
     - **Filtro**:  
@@ -203,7 +203,7 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
       **Ejemplo de uso combinando filtro, ordenamiento y paginado**:  
       Para obtener la página 2 (páginas con 4 elementos) del listado de los libros ordenados por autor en orden descendente cuyos títulos empiecen con "La":
       ```http
-      GET <<BaseUrl>>/api/libros?orderBy=autor&order=desc&filterBy=titulo&filter=La&page=2&limit=4
+      GET <<BaseUrl>>/api/libros?orderBy=autor&order=desc&filterBy=titulo&filtrO=La&page=2&limit=4
       ```
       
 
@@ -387,7 +387,7 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
 
 - **DELETE** `<<BaseUrl>>/api/usuarios/:idusuario`  
   Authorization: Bearer tokenJWT  
-  Elimina el usuario correspondiente al `idusuario`. Debe notarse que para poder eliminar un autor, primero debe estar identificado a través de un token de autorización. También observe que si el usuario es el mismo del usuario que está trabajando, o si fuera el último usuario que queda, no se podrá borrar el usuario.
+  Elimina el usuario correspondiente al `idusuario`. Debe notarse que para poder eliminar un usuario, primero debe estar identificado a través de un token de autorización. También observe que si el usuario es el mismo del usuario que está trabajando, o si fuera el último usuario que queda, no se podrá borrar el usuario.
 
 
 
