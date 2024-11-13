@@ -19,7 +19,7 @@ class LibrosModel extends Model {
         $miOffset = (int) $offset;
         $miLimit  = (int) $limit;
 
-        // con execute y array de valores
+        // OPCION 1: con execute y array de valores
         // NOTA: POR ALGUNA RAZON ESTÁ DANDO PROBLEMAS EL LIMIT Y OFFSET USANDO ?
         /* $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
             . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
@@ -27,7 +27,7 @@ class LibrosModel extends Model {
         $query->execute([$miLimit, $miOffset]);
         */
 
-        // con bindValue
+        // OPCION 2: con bindValue
         $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
            . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
         $query = $this->db->prepare($sql1); 
@@ -40,7 +40,7 @@ class LibrosModel extends Model {
         $query->execute();
 
         
-        /* // Sin ?
+        /* // OPCION 3: Sin ?
         $sql2 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
             . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ' . $miLimit . ' OFFSET ' . $miOffset;
         $query = $this->db->prepare($sql2); 
@@ -67,13 +67,26 @@ class LibrosModel extends Model {
         $miOffset = (int) $offset;
         $miLimit  = (int) $limit;
 
+        /*
+        // OPCION 1: con execute y array de valores
         // NOTA: POR ALGUNA RAZON ESTÁ DANDO PROBLEMAS EL LIMIT Y OFFSET USANDO ?
-        // $query = $this->db->prepare('SELECT idLibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero AND ' . $campoYOperador . ' ? ORDER BY ' . $orden . ' LIMIT ? OFFSET ?');
-        // $query->execute([$txtfiltro, $miLimit, $miOffset]);   
-        
+        $query = $this->db->prepare('SELECT idLibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero AND ' . $campoYOperador . ' ? ORDER BY ' . $orden . ' LIMIT ? OFFSET ?');
+        $query->execute([$txtfiltro, $miLimit, $miOffset]);  
+        */
+
+        // OPCION 2: con bindValue
+        $query = $this->db->prepare('SELECT idLibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero AND ' . $campoYOperador . ' ? ORDER BY ' . $orden . ' LIMIT ? OFFSET ?');
+        $query->bindValue(1, $txtfiltro, PDO::PARAM_STR);
+        $query->bindValue(2, $miLimit, PDO::PARAM_INT);
+        $query->bindValue(3, $miOffset, PDO::PARAM_INT);
+        $query->execute();
+
+        /*
+        // OPCION 3: sin usar ? para LIMIT ni OFFSET
         $query = $this->db->prepare('SELECT idLibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero AND ' . $campoYOperador . ' ? ORDER BY ' . $orden . ' LIMIT ' . $miLimit . ' OFFSET ' . $miOffset);
         $query->execute([$txtfiltro]);
-    
+        */
+
         $libros = $query->fetchAll(PDO::FETCH_OBJ);  // 3. Obtengo los datos en un arreglo de objetos
     
         return $libros;
