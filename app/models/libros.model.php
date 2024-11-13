@@ -19,17 +19,34 @@ class LibrosModel extends Model {
         $miOffset = (int) $offset;
         $miLimit  = (int) $limit;
 
+        // con execute y array de valores
         // NOTA: POR ALGUNA RAZON ESTÁ DANDO PROBLEMAS EL LIMIT Y OFFSET USANDO ?
-        // $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
-        //    . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
-        // $query = $this->db->prepare($sql1); 
-        // $query->execute([$miLimit, $miOffset]);
+        /* $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
+            . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
+        $query = $this->db->prepare($sql1); 
+        $query->execute([$miLimit, $miOffset]);
+        */
 
+        // con bindValue
+        $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
+           . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
+        $query = $this->db->prepare($sql1); 
+
+        // Ligar los valores a los placeholders
+        $query->bindValue(1, $miLimit, PDO::PARAM_INT);
+        $query->bindValue(2, $miOffset, PDO::PARAM_INT);
+
+        // Ejecutar la consulta
+        $query->execute();
+
+        
+        /* // Sin ?
         $sql2 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
             . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ' . $miLimit . ' OFFSET ' . $miOffset;
         $query = $this->db->prepare($sql2); 
         $query->execute();
-     
+        */
+
         $Libros = $query->fetchAll(PDO::FETCH_OBJ);  // 3. Obtengo los datos en un arreglo de objetos
      
         return $Libros;
