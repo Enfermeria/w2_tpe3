@@ -12,9 +12,20 @@ Es un servicio web de tipo RESTFul de una base de datos con su tabla de libros, 
 
 Al visualizar los datos de los libros, se traen también los correspondientes datos del nombre del autor y del género al que el libro pertenece. 
 
+Se cumplen todos los requerimientos obligatorios y opcionales:
+  * La API Rest es RESTful
+  * Tiene servicios GET de libros, autores, géneros y usuarios. En particular el get de libros lista también los autores y géneros que corresponden a cada libro.
+  * El servicio del listado de libros puede ordenarse por cualquiera de los campos de manera ascendente o descendente.
+  * Tanto libros, como autores, géneros y usuarios tienen un servicio que obtenga (GET) la entidad determinada por su ID.
+  * Tanto libros como autores, géneros y usuarios tienen servicios para agregar y modificar datos (POST y PUT)
+  * La API Rest maneja de manera adecuada los códigos de error 200, 201, 400, 401, 403, 404 y 500.
   * Todo el sistema usa el patrón MVC. 
-  * Se incluye el SQL para la instalación de la base de datos (si no se desa usar el AutoDeploy)
+  * Se incluye el SQL para la instalación de la base de datos
   * Se incluye un usario "webadmin" con clave "admin"
+  * El servicio del listado de libros tiene sistema de paginado.
+  * El servicio del listado de libros puede filtrarse por título, autor, género y edición.
+  * Todos los servicios requierin un token para realizar modificaciones (PUT, POST). En particular, el servicio de listado de usuarios también requiere token por una cuestión de seguridad.
+  * Se adjunta este documento con los endpoints generados con la descripción de cada endpoint, cómo se usan y ejemplos.
 
 
 
@@ -147,7 +158,7 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
       ```
       Para obtener todos los libros ordenados por título en orden por defecto (ascendente):
       ```http
-      GET <<BaseUrl>>/api/libros?orderBy=autor
+      GET <<BaseUrl>>/api/libros?orderBy=titulo
       ```
 
     - **Filtro**:  
@@ -189,6 +200,13 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
       GET <<BaseUrl>>/api/libros?page=3&limit=10
       ```
       
+      **Ejemplo de uso combinando filtro, ordenamiento y paginado**:  
+      Para obtener la página 2 (páginas con 4 elementos) del listado de los libros ordenados por autor en orden descendente cuyos títulos empiecen con "La":
+      ```http
+      GET <<BaseUrl>>/api/libros?orderBy=autor&order=desc&filterBy=titulo&filtrO=La&page=2&limit=4
+      ```
+      
+
 ---
 
 - **GET** `<<BaseUrl>>/api/libros/:idlibro`  
@@ -369,7 +387,7 @@ Para dar de borrar, modificar o dar de alta un nuevo libro/autor/género/usuario
 
 - **DELETE** `<<BaseUrl>>/api/usuarios/:idusuario`  
   Authorization: Bearer tokenJWT  
-  Elimina el usuario correspondiente al `idusuario`. Debe notarse que para poder eliminar un autor, primero debe estar identificado a través de un token de autorización. También observe que si el usuario es el mismo del usuario que está trabajando, o si fuera el último usuario que queda, no se podrá borrar el usuario.
+  Elimina el usuario correspondiente al `idusuario`. Debe notarse que para poder eliminar un usuario, primero debe estar identificado a través de un token de autorización. También observe que si el usuario es el mismo del usuario que está trabajando, o si fuera el último usuario que queda, no se podrá borrar el usuario.
 
 
 
