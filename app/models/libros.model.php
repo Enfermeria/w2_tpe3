@@ -19,9 +19,9 @@ class LibrosModel extends Model {
         $miOffset = (int) $offset;
         $miLimit  = (int) $limit;
 
-        // OPCION 1: con execute y array de valores
+        /* // OPCION 1: con execute y array de valores
         // NOTA: POR ALGUNA RAZON ESTÁ DANDO PROBLEMAS EL LIMIT Y OFFSET USANDO ?
-        /* $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
+        $sql1 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
             . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ? OFFSET ? ';
         $query = $this->db->prepare($sql1); 
         $query->execute([$miLimit, $miOffset]);
@@ -35,12 +35,10 @@ class LibrosModel extends Model {
         // Ligar los valores a los placeholders
         $query->bindValue(1, $miLimit, PDO::PARAM_INT);
         $query->bindValue(2, $miOffset, PDO::PARAM_INT);
-
-        // Ejecutar la consulta
-        $query->execute();
+        $query->execute(); // Ejecutar la consulta
 
         
-        /* // OPCION 3: Sin ?
+        /* // OPCION 3: Sin ?, concatenando las variables
         $sql2 = 'SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero ' 
             . ' WHERE libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden . ' LIMIT ' . $miLimit . ' OFFSET ' . $miOffset;
         $query = $this->db->prepare($sql2); 
@@ -53,16 +51,7 @@ class LibrosModel extends Model {
     } //getAll
 
 
-    function getPorAutor($idAutor, $orden = 'idlibro') {
-        $query = $this->db->prepare('SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE  libro.idautor = ? AND libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden);
-        $query->execute([$idAutor]);   
-      
-        $libros = $query->fetchAll(PDO::FETCH_OBJ);
-      
-        return $libros;
-    } //getPorAutor
     
-
     function getFiltradoPor($campoYOperador, $txtfiltro, $orden, $limit = PHP_INT_MAX, $offset = 0){
         $miOffset = (int) $offset;
         $miLimit  = (int) $limit;
@@ -133,6 +122,15 @@ class LibrosModel extends Model {
     } //getFiltradoPorEdicionMayorOIgual
 
 
+    function getPorAutor($idAutor, $orden = 'idlibro') {
+        $query = $this->db->prepare('SELECT idlibro, titulo, edicion, libro.idautor, autor.nombre as nombre, libro.idgenero, genero.genero as genero FROM libro, autor, genero WHERE  libro.idautor = ? AND libro.idautor=autor.idautor AND libro.idgenero=genero.idgenero ORDER BY ' . $orden);
+        $query->execute([$idAutor]);   
+      
+        $libros = $query->fetchAll(PDO::FETCH_OBJ);
+      
+        return $libros;
+    } //getPorAutor
+    
 
 
     function insert($titulo, $idAutor, $idGenero, $edicion) { // agrega un nuevo registro a la tabla libros
