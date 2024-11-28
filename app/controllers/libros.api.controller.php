@@ -29,7 +29,7 @@ class LibrosApiController{
         if (isset($req->query->sortBy))
             $filtro->cbordenar = strtoupper($req->query->sortBy);
         elseif (isset($req->query->orderBy))
-        $filtro->cbordenar = strtoupper($req->query->orderBy);
+            $filtro->cbordenar = strtoupper($req->query->orderBy);
         else
             $filtro->cbordenar = "";
 
@@ -58,10 +58,10 @@ class LibrosApiController{
 
         //veo si quiere asc o desc
         if(isset($req->query->order)) {
-            if ($filtro->cbordenar!='' && strtoupper($req->query->order) == 'DESC')
-                $filtro->cbordenar .= ' DESC';
-            else if ($filtro->cbordenar!='' && strtoupper($req->query->order) == 'ASC')
-                $filtro->cbordenar .= ' ASC';
+            if ($filtro->orden!='' && strtoupper($req->query->order) == 'DESC')
+                $filtro->orden .= ' DESC';
+            else if ($filtro->orden!='' && strtoupper($req->query->order) == 'ASC')
+                $filtro->orden .= ' ASC';
             else
                 return $this->view->response('order con valor no válido', 400);
         }
